@@ -1,0 +1,85 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 32px 0;
+}
+
+.stepWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--bg-card);
+  border: 2px solid var(--border-subtle);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.step.active .circle {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: white;
+  box-shadow: var(--shadow-glow-sm);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+.step.active .label {
+  color: var(--accent-purple-light);
+  font-weight: 600;
+}
+
+.step.completed .circle {
+  background: var(--success);
+  border-color: transparent;
+  color: white;
+}
+.step.completed .label {
+  color: var(--success);
+}
+
+.connector {
+  width: 80px;
+  height: 2px;
+  background: var(--border-subtle);
+  margin: 0 8px;
+  margin-bottom: 30px;
+  transition: background 0.4s ease;
+}
+
+.connectorDone {
+  background: var(--success);
+}
+
+@media (max-width: 480px) {
+  .connector {
+    width: 40px;
+  }
+  .label {
+    font-size: 0.7rem;
+  }
+}
