@@ -258,6 +258,15 @@
 }
 
 @media (max-width: 640px) {
+  .confirmRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .confirmDivider {
+    width: 100%;
+    height: 1px;
+  }
   .stepFooter {
     flex-direction: column;
     gap: 16px;

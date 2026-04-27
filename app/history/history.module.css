@@ -299,3 +299,8 @@
   .skillsGrid { grid-template-columns: 1fr; }
   .detailPanel { padding: 24px 16px; }
 }
+
+@media (max-width: 640px) {
+  .detailHeader { flex-direction: column; gap: 12px; }
+  .scoreRow { flex-direction: column; text-align: center; gap: 16px; }
+}
