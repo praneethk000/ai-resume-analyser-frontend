@@ -42,6 +42,13 @@ export default function Navbar() {
             </>
           ) : (
             <>
+              <Link
+                href="/analyse"
+                className={`${styles.navLink} ${pathname === '/analyse' ? styles.active : ''}`}
+                style={{ marginRight: 8 }}
+              >
+                Analyse
+              </Link>
               <Link href="/login" className="btn-ghost">Log In</Link>
               <Link href="/register" className="btn-primary" style={{ padding: '9px 22px', fontSize: '0.9rem' }}>
                 Get Started

@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import styles from './register.module.css';
 import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '@/app/lib/api';
+import toast from 'react-hot-toast';
 
 function RegisterForm() {
   const router = useRouter();
@@ -14,32 +15,53 @@ function RegisterForm() {
   const isMarketing = searchParams.get('marketing') === 'true';
   const { login } = useAuth();
   const [form, setForm] = useState({ username: '', email: '', password: '' });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   function handleChange(e) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    setError('');
   }
 
   const registerMutation = useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
       login(data);
+      toast.success('Account created successfully!');
       router.push('/dashboard');
     },
     onError: (error) => {
-      setError(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message || 'Failed to create account');
     },
   });
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (form.password.length < 6) {
-      setError('Password must be at least 6 characters.');
+    
+    // Validations
+    if (!form.username.trim().includes(' ')) {
+      toast.error('Please enter your full name (first and last name).');
       return;
     }
-    setError('');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
+
+    if (form.password.length < 8) {
+      toast.error('Password must be at least 8 characters long.');
+      return;
+    }
+    
+    if (!/[A-Z]/.test(form.password)) {
+      toast.error('Password must contain at least one uppercase letter.');
+      return;
+    }
+    
+    if (!/[0-9]/.test(form.password)) {
+      toast.error('Password must contain at least one number.');
+      return;
+    }
+
     registerMutation.mutate({ username: form.username, email: form.email, password: form.password });
   }
 
@@ -104,7 +126,7 @@ function RegisterForm() {
             />
           </div>
 
-          {error && <div className={styles.error}>{error}</div>}
+          {/* Error display removed in favor of toast */}
 
           <button
             type="submit"

@@ -26,10 +26,20 @@ export async function uploadResume(file, userId) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('userId', userId);
-
-    // Let Axios automatically set the Content-Type to multipart/form-data with the correct boundary
-    const res = await api.post('/web/api/resume/v1/uploadResume', formData);
+    const res = await api.post('/web/api/resume/v1/uploadResume', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return res.data; // { resumeId, extractedSkills: string[] }
+}
+
+// Sends resume file for skill extraction without saving to database
+export async function extractSkillsOnly(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await api.post('/web/api/resume/v1/extractSkillsOnly', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return res.data; // string[]
 }
 
 // FIX: was named getResumeByUserId — unified to getResumesByUser everywhere

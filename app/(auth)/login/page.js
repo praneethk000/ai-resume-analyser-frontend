@@ -7,32 +7,41 @@ import { useAuth } from '@/context/AuthContext';
 import styles from './login.module.css';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '@/app/lib/api';
+import toast from 'react-hot-toast';
 
 function LoginForm() {
   const router = useRouter();
   const { login } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   function handleChange(e) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    setError('');
   }
+
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       login(data);
+      toast.success('Successfully signed in!');
       router.push('/dashboard');
     },
     onError: (error) => {
-      setError(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message || 'Login failed');
     },
   });
 
   function handleSubmit(e) {
     e.preventDefault();
-    setError('');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
+    if (!form.password) {
+      toast.error('Please enter your password.');
+      return;
+    }
+    
     loginMutation.mutate({ email: form.email, password: form.password });
   }
 
@@ -76,7 +85,7 @@ function LoginForm() {
             />
           </div>
 
-          {error && <div className={styles.error}>{error}</div>}
+          {/* Error display removed in favor of toast */}
 
           <button
             type="submit"

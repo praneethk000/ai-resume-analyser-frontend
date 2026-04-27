@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  FiFileText, FiSearch, FiAward, FiZap, FiPlusCircle,
+  FiFileText, FiSearch, FiAward, FiZap, FiPlusCircle, FiDownload, FiMail
 } from 'react-icons/fi';
 import { useAuth } from '@/context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
@@ -134,6 +134,33 @@ export default function OverviewPage() {
             ))}
           </div>
         )}
+
+        {/* ── Coming Soon Section ── */}
+        <div className={styles.sectionHeader} style={{ marginTop: 48 }}>
+          <h2 className={styles.sectionTitle}>Coming Soon</h2>
+          <span className={styles.resumeCount}>In Development</span>
+        </div>
+        <div className={styles.resumeGrid}>
+          <div className={styles.statCard} style={{ borderStyle: 'dashed', opacity: 0.8 }}>
+            <div className={styles.statIconWrap} style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>
+              <FiDownload size={20} />
+            </div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 600, marginTop: 4 }}>PDF Report Export</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+              Download your full AI match analysis and skill gap report as a beautifully formatted PDF document.
+            </p>
+          </div>
+          <div className={styles.statCard} style={{ borderStyle: 'dashed', opacity: 0.8 }}>
+            <div className={styles.statIconWrap} style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
+              <FiMail size={20} />
+            </div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 600, marginTop: 4 }}>AI Cover Letter Generation</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+              Instantly generate a tailored cover letter using your resume and the matched job description.
+            </p>
+          </div>
+        </div>
+
       </div>
     </AppShell>
   );

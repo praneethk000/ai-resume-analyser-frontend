@@ -14,7 +14,8 @@ import Navbar from '@/components/Navbar';
 import StepIndicator from '@/components/StepIndicator';
 import styles from './analyse.module.css';
 import { useMutation } from '@tanstack/react-query';
-import { analyseResume, createJobDescription, uploadResume } from '../lib/api';
+import { analyseResume, createJobDescription, uploadResume, extractSkillsOnly } from '../lib/api';
+import toast from 'react-hot-toast';
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -46,7 +47,20 @@ function AnalyseContent() {
       setLoading(false);
     },
     onError: (error) => {
-      alert(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message || 'Upload failed');
+      setLoading(false);
+    }
+  });
+
+  const extractMutation = useMutation({
+    mutationFn: extractSkillsOnly,
+    onSuccess: (skills) => {
+      setUploadedResumeId('guest-resume');
+      setExtractedSkills(skills || []);
+      setLoading(false);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || error.message || 'Extraction failed');
       setLoading(false);
     }
   });
@@ -59,7 +73,7 @@ function AnalyseContent() {
       setLoading(false);
     },
     onError: (error) => {
-      alert(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message || 'Failed to save job description');
       setLoading(false);
     },
   });
@@ -72,7 +86,7 @@ function AnalyseContent() {
       router.push('/results');
     },
     onError: (error) => {
-      alert(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message || 'Analysis failed');
       setLoading(false);
     },
   });
@@ -94,11 +108,7 @@ function AnalyseContent() {
     setUploadedFile(file);
     if (!user) {
       setLoading(true);
-      setTimeout(() => {
-        setUploadedResumeId('guest-resume');
-        setExtractedSkills(['JavaScript', 'React', 'Problem Solving', 'Communication']);
-        setLoading(false);
-      }, 1500);
+      extractMutation.mutate(file);
       return;
     }
     setLoading(true);

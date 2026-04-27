@@ -13,12 +13,15 @@ export const metadata = {
   description: "Upload your resume, match it against any job description, and get an AI-powered match score with skill gap analysis. Land your dream job faster.",
 };
 
+import { Toaster } from 'react-hot-toast';
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.className}>
       <body>
         <Providers>
           {children}
+          <Toaster position="top-right" />
         </Providers>
       </body>
     </html>
