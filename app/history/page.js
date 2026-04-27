@@ -145,8 +145,8 @@ export default function HistoryPage() {
                     {Math.round(selected.matchScore)}% Match
                   </p>
                   <p className={styles.scoreDesc}>
-                    Matched {selected.matchedSkills.split(',').length} out of{' '}
-                    {selected.matchedSkills.split(',').length + selected.missingSkills.split(',').filter(Boolean).length} required skills.
+                    Matched {selected.matchedSkills?.split(',').filter(Boolean).length || 0} out of{' '}
+                    {(selected.matchedSkills?.split(',').filter(Boolean).length || 0) + (selected.missingSkills?.split(',').filter(Boolean).length || 0)} required skills.
                   </p>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                     Resume: {selected.resumeFileName || 'Unknown Resume'}
@@ -160,10 +160,10 @@ export default function HistoryPage() {
                   <div className={styles.skillBoxHeader}>
                     <FiCheckCircle size={14} color="var(--success)" />
                     <span>Matched Skills</span>
-                    <span className="badge badge-success">{selected.matchedSkills.split(',').length}</span>
+                    <span className="badge badge-success">{selected.matchedSkills?.split(',').filter(Boolean).length || 0}</span>
                   </div>
                   <div className={styles.skillTags}>
-                    {selected.matchedSkills.split(',').map(s => (
+                    {selected.matchedSkills?.split(',').filter(Boolean).map(s => (
                       <span key={s.trim()} className="badge badge-success">{s.trim()}</span>
                     ))}
                   </div>
@@ -174,12 +174,12 @@ export default function HistoryPage() {
                     <FiXCircle size={14} color="var(--danger)" />
                     <span>Missing Skills</span>
                     <span className="badge badge-danger">
-                      {selected.missingSkills ? selected.missingSkills.split(',').length : 0}
+                      {selected.missingSkills ? selected.missingSkills.split(',').filter(Boolean).length : 0}
                     </span>
                   </div>
                   <div className={styles.skillTags}>
-                    {selected.missingSkills ? (
-                      selected.missingSkills.split(',').map(s => (
+                    {selected.missingSkills && selected.missingSkills.split(',').filter(Boolean).length > 0 ? (
+                      selected.missingSkills.split(',').filter(Boolean).map(s => (
                         <span key={s.trim()} className="badge badge-danger">{s.trim()}</span>
                       ))
                     ) : (

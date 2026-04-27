@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import {
@@ -38,6 +38,15 @@ function AnalyseContent() {
   // Step 2 state
   const [jobForm, setJobForm] = useState({ jobTitle: '', companyName: '', jobDescriptionText: '' });
   const [createdJobId, setCreatedJobId] = useState(null);
+
+  // Re-hydrate pending job description if returned from registration
+  useEffect(() => {
+    const pendingJob = sessionStorage.getItem('pendingJobDescription');
+    if (pendingJob && user) {
+      setJobForm(JSON.parse(pendingJob));
+      setStep(1); // They need to re-upload the file
+    }
+  }, [user]);
 
   const uploadMutation = useMutation({
     mutationFn: ({ file }) => uploadResume(file, user?.userId),
@@ -82,6 +91,7 @@ function AnalyseContent() {
     mutationFn: ({ resumeId, jobId }) => analyseResume(resumeId, jobId),
     onSuccess: (data) => {
       sessionStorage.setItem('lastAnalysis', JSON.stringify(data));
+      sessionStorage.removeItem('pendingJobDescription');
       setLoading(false);
       router.push('/results');
     },
@@ -138,6 +148,7 @@ function AnalyseContent() {
   // ── Step 3: Run analysis ────────────────────────────────────────────────────
   function handleRunAnalysis() {
     if (!user) {
+      sessionStorage.setItem('pendingJobDescription', JSON.stringify(jobForm));
       router.push('/register?marketing=true');
       return;
     }

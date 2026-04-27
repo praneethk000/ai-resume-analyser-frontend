@@ -64,7 +64,7 @@ function LandingContent() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/register" className="btn-primary" style={{ padding: '14px 36px', fontSize: '1rem' }}>
+                  <Link href="/analyse" className="btn-primary" style={{ padding: '14px 36px', fontSize: '1rem' }}>
                     Start Analysing Free <FiArrowRight />
                   </Link>
                   <Link href="/login" className="btn-outline" style={{ padding: '14px 36px', fontSize: '1rem' }}>

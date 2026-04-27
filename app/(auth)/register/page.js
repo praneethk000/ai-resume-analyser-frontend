@@ -24,8 +24,13 @@ function RegisterForm() {
     mutationFn: registerUser,
     onSuccess: (data) => {
       login(data);
-      toast.success('Account created successfully!');
-      router.push('/dashboard');
+      if (sessionStorage.getItem('pendingJobDescription')) {
+        toast.success('Account created! Please re-upload your resume to finish your analysis.');
+        router.push('/analyse');
+      } else {
+        toast.success('Account created successfully!');
+        router.push('/dashboard');
+      }
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || error.message || 'Failed to create account');
@@ -117,7 +122,7 @@ function RegisterForm() {
               id="password"
               name="password"
               type="password"
-              placeholder="Min. 6 characters"
+              placeholder="Min. 8 characters"
               className="form-input"
               value={form.password}
               onChange={handleChange}

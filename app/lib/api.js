@@ -21,24 +21,19 @@ export async function loginUser({ email, password }) {
 
 // ── RESUME ────────────────────────────────────────────────────────────────────
 
-// Sends resume file and userId to backend, returns object with extracted resumeId and skills
 export async function uploadResume(file, userId) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('userId', userId);
-    const res = await api.post('/web/api/resume/v1/uploadResume', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    // Let Axios set the Content-Type automatically so it includes the boundary
+    const res = await api.post('/web/api/resume/v1/uploadResume', formData);
     return res.data; // { resumeId, extractedSkills: string[] }
 }
 
-// Sends resume file for skill extraction without saving to database
 export async function extractSkillsOnly(file) {
     const formData = new FormData();
     formData.append('file', file);
-    const res = await api.post('/web/api/resume/v1/extractSkillsOnly', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const res = await api.post('/web/api/resume/v1/extractSkillsOnly', formData);
     return res.data; // string[]
 }
 
