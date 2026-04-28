@@ -37,6 +37,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
+  min-width: 0;
 }
 
 .title {
@@ -44,11 +45,15 @@
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.3;
+  word-break: break-word;
 }
 
 .name {
   font-size: 0.83rem;
   color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fileInfo {
@@ -60,6 +65,9 @@
   padding: 8px 12px;
   background: var(--border-subtle);
   border-radius: var(--radius-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .skills {

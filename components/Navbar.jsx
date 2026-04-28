@@ -62,7 +62,6 @@ export default function Navbar() {
               <Link
                 href="/analyse"
                 className={`${styles.navLink} ${pathname === '/analyse' ? styles.active : ''}`}
-                style={{ marginRight: 8 }}
                 onClick={closeMenu}
               >
                 Analyse

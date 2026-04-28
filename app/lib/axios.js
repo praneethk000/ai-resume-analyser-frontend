@@ -1,7 +1,13 @@
 import axios from "axios"
 
+const getBaseUrl = () => {
+    if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+    if (typeof window !== 'undefined') return `http://${window.location.hostname}:8080`;
+    return 'http://localhost:8080';
+};
+
 const api = axios.create({
-    baseURL: 'http://localhost:8080'
+    baseURL: getBaseUrl()
 });
 
 // Request interceptor to add auth token

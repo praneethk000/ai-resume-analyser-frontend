@@ -1,7 +1,13 @@
 import api from "./axios";
 import axios from "axios";
 
-const BASE_URL = 'http://localhost:8080';
+const getBaseUrl = () => {
+    if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+    if (typeof window !== 'undefined') return `http://${window.location.hostname}:8080`;
+    return 'http://localhost:8080';
+};
+
+const BASE_URL = getBaseUrl();
 
 // ── AUTH (no token needed yet, use plain axios) ───────────────────────────────
 
