@@ -1,8 +1,8 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   FiCheckCircle, FiXCircle, FiArrowLeft,
   FiPlusCircle, FiHome, FiFileText, FiBriefcase,
@@ -12,11 +12,19 @@ import AppShell from '@/components/AppShell';
 import ScoreRing from '@/components/ScoreRing';
 import styles from './results.module.css';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@/context/AuthContext';
 import { getAnalysisByResumeId } from '../lib/api';
 
 function ResultsContent() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const resumeId = searchParams.get('resumeId');
+
+  // Auth guard: redirect unauthenticated users to login
+  useEffect(() => {
+    if (!loading && !user) router.replace('/login');
+  }, [user, loading, router]);
 
   const stored = typeof window !== 'undefined' ? sessionStorage.getItem('lastAnalysis') : null;
 
@@ -26,8 +34,23 @@ function ResultsContent() {
     enabled: !stored && !!resumeId,
   });
 
-  // Use sessionStorage result (just navigated from /analyse) or the latest from DB
-  const result = stored ? JSON.parse(stored) : (Array.isArray(analyses) ? analyses[analyses.length - 1] : null);
+  // Safe JSON.parse — a corrupted sessionStorage entry would otherwise crash the whole page
+  let result = null;
+  try {
+    result = stored ? JSON.parse(stored) : (Array.isArray(analyses) ? analyses[analyses.length - 1] : null);
+  } catch {
+    // sessionStorage was corrupted; clear it and fall through to "No analysis found"
+    if (typeof window !== 'undefined') sessionStorage.removeItem('lastAnalysis');
+  }
+
+  // Show spinner while auth rehydrates
+  if (loading || !user) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div className="spinner" style={{ width: 36, height: 36 }} />
+      </div>
+    );
+  }
 
   if (isLoading) return <p style={{ padding: '40px', color: 'var(--text-secondary)' }}>Loading results...</p>;
   if (isError) return <p style={{ color: 'var(--danger)', padding: '40px' }}>Error: {error.message}</p>;

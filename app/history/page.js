@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   FiClock, FiChevronRight, FiFileText,
   FiCheckCircle, FiXCircle,
@@ -32,14 +33,29 @@ function formatDate(isoString) {
 }
 
 export default function HistoryPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const [selected, setSelected] = useState(null);
+
+  // Auth guard: redirect unauthenticated users to login
+  useEffect(() => {
+    if (!loading && !user) router.replace('/login');
+  }, [user, loading, router]);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['analyses', user?.userId],
     queryFn: () => getAllAnalysesByUser(user.userId),
     enabled: !!user?.userId,
   });
+
+  // Show spinner while auth state rehydrates
+  if (loading || !user) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div className="spinner" style={{ width: 36, height: 36 }} />
+      </div>
+    );
+  }
 
   const history = Array.isArray(data) ? data : [];
 

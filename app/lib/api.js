@@ -27,10 +27,11 @@ export async function loginUser({ email, password }) {
 
 // ── RESUME ────────────────────────────────────────────────────────────────────
 
-export async function uploadResume(file, userId) {
+// NOTE: userId param removed — backend now derives the user from the JWT (IDOR fix).
+// The @AuthenticationPrincipal on the backend always uses the authenticated user's ID.
+export async function uploadResume(file) {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('userId', userId);
     // Let Axios set the Content-Type automatically so it includes the boundary
     const res = await api.post('/web/api/resume/v1/uploadResume', formData);
     return res.data; // { resumeId, extractedSkills: string[] }

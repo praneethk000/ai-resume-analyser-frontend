@@ -26,9 +26,11 @@ api.interceptors.response.use(
 
     (error) => {
         if (error.response?.status === 401) {
-            localStorage.removeItem('resumeai_user');
-            localStorage.removeItem('resumeai_token');
-            window.location.href = '/login';
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('resumeai_user');
+                localStorage.removeItem('resumeai_token');
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }

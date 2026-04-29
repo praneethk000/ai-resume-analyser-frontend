@@ -12,6 +12,7 @@ import ResumeCard from '@/components/ResumeCard';
 import styles from './dashboard.module.css';
 
 import { getResumesByUser, getAllAnalysesByUser } from '../lib/api';
+import { useEffect } from 'react';
 
 function getTimeOfDay() {
   const hour = new Date().getHours();
@@ -21,8 +22,15 @@ function getTimeOfDay() {
 }
 
 export default function OverviewPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
+
+  // Auth guard: redirect unauthenticated users to login
+  useEffect(() => {
+    if (!loading && !user) router.replace('/login');
+  }, [user, loading, router]);
+
+
 
   const { data: resumes = [], isLoading: resumesLoading, isError: resumesError } = useQuery({
     queryKey: ['resumes', user?.userId],
@@ -38,6 +46,15 @@ export default function OverviewPage() {
 
   const isLoading = resumesLoading || analysesLoading;
   const isError = resumesError || analysesError;
+
+  // Show spinner while auth state rehydrates from localStorage
+  if (loading || !user) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div className="spinner" style={{ width: 36, height: 36 }} />
+      </div>
+    );
+  }
 
   // Calculate stats
   const safeAnalyses = Array.isArray(analyses) ? analyses : [];
@@ -57,10 +74,10 @@ export default function OverviewPage() {
   });
 
   const statsData = [
-    { label: 'Resumes Uploaded', value: safeResumes.length.toString(),   Icon: FiFileText },
-    { label: 'Analyses Run',     value: safeAnalyses.length.toString(),  Icon: FiSearch   },
-    { label: 'Best Match Score', value: `${Math.round(bestScore)}%`, Icon: FiAward    },
-    { label: 'Skills Tracked',   value: uniqueSkills.size.toString(),  Icon: FiZap      },
+    { label: 'Resumes Uploaded', value: safeResumes.length.toString(), Icon: FiFileText },
+    { label: 'Analyses Run', value: safeAnalyses.length.toString(), Icon: FiSearch },
+    { label: 'Best Match Score', value: `${Math.round(bestScore)}%`, Icon: FiAward },
+    { label: 'Skills Tracked', value: uniqueSkills.size.toString(), Icon: FiZap },
   ];
 
   function handleAnalyse(resumeId) {

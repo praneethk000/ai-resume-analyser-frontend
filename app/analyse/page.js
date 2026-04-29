@@ -49,7 +49,7 @@ function AnalyseContent() {
   }, [user]);
 
   const uploadMutation = useMutation({
-    mutationFn: ({ file }) => uploadResume(file, user?.userId),
+    mutationFn: ({ file }) => uploadResume(file), // userId removed — backend uses JWT principal
     onSuccess: (data) => {
       setUploadedResumeId(data.resumeId);
       setExtractedSkills(data.extractedSkills || []);

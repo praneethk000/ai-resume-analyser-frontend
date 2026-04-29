@@ -6,7 +6,7 @@ import {
   FiArrowRight, FiCheckCircle, FiAlertCircle,
   FiUpload,
 } from 'react-icons/fi';
-import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext'; // AuthProvider is already in layout.js via Providers
 import Navbar from '@/components/Navbar';
 import styles from './page.module.css';
 
@@ -176,10 +176,9 @@ function LandingContent() {
   );
 }
 
+// AuthProvider is already provided by layout.js → Providers → AuthProvider.
+// Wrapping again here would create a nested context with isolated state,
+// meaning auth changes (login/logout) from other pages won't reflect here.
 export default function LandingPage() {
-  return (
-    <AuthProvider>
-      <LandingContent />
-    </AuthProvider>
-  );
+  return <LandingContent />;
 }
