@@ -8,6 +8,7 @@ import styles from './register.module.css';
 import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '@/app/lib/api';
 import toast from 'react-hot-toast';
+import OAuthLoginButton, { OrDivider } from '@/app/components/OAuthLoginButton';
 
 function RegisterForm() {
   const router = useRouter();
@@ -39,8 +40,7 @@ function RegisterForm() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    
-    // Validations
+
     if (!form.username.trim().includes(' ')) {
       toast.error('Please enter your full name (first and last name).');
       return;
@@ -56,12 +56,12 @@ function RegisterForm() {
       toast.error('Password must be at least 8 characters long.');
       return;
     }
-    
+
     if (!/[A-Z]/.test(form.password)) {
       toast.error('Password must contain at least one uppercase letter.');
       return;
     }
-    
+
     if (!/[0-9]/.test(form.password)) {
       toast.error('Password must contain at least one number.');
       return;
@@ -74,12 +74,16 @@ function RegisterForm() {
     <div className={styles.page}>
       <div className={styles.bg} aria-hidden />
       <div className={styles.card}>
+        {/* Logo */}
         <div className={styles.logoRow}>
           <Link href="/" className={styles.logo}>◆ ResumeAI</Link>
         </div>
-        
+
         {isMarketing && (
-          <div className="badge badge-purple" style={{ marginBottom: 16, fontSize: '0.85rem', display: 'inline-flex' }}>
+          <div
+            className="badge badge-purple"
+            style={{ marginBottom: 16, fontSize: '0.85rem', display: 'inline-flex' }}
+          >
             Sign up to see your AI analysis results!
           </div>
         )}
@@ -87,11 +91,18 @@ function RegisterForm() {
         <h1 className={styles.title}>Create your account</h1>
         <p className={styles.subtitle}>Start analysing resumes for free. No credit card needed.</p>
 
+        {/* ── Google OAuth (primary CTA) ── */}
+        <OAuthLoginButton label="Sign up with Google" />
+
+        {/* ── OR divider ── */}
+        <OrDivider text="or continue with email" />
+
+        {/* ── Email / password form ── */}
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className="form-group">
-            <label className="form-label" htmlFor="username">Full Name</label>
+            <label className="form-label" htmlFor="reg-username">Full Name</label>
             <input
-              id="username"
+              id="reg-username"
               name="username"
               type="text"
               placeholder="Praneeth Kumar"
@@ -103,9 +114,9 @@ function RegisterForm() {
             />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="email">Email</label>
+            <label className="form-label" htmlFor="reg-email">Email</label>
             <input
-              id="email"
+              id="reg-email"
               name="email"
               type="email"
               placeholder="you@example.com"
@@ -117,12 +128,12 @@ function RegisterForm() {
             />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+            <label className="form-label" htmlFor="reg-password">Password</label>
             <input
-              id="password"
+              id="reg-password"
               name="password"
               type="password"
-              placeholder="Min. 8 characters"
+              placeholder="Min. 8 chars, 1 uppercase, 1 number"
               className="form-input"
               value={form.password}
               onChange={handleChange}
@@ -131,15 +142,16 @@ function RegisterForm() {
             />
           </div>
 
-          {/* Error display removed in favor of toast */}
-
           <button
             type="submit"
             className="btn-primary"
+            id="register-submit-btn"
             disabled={registerMutation.isPending}
             style={{ width: '100%', justifyContent: 'center', padding: '13px' }}
           >
-            {registerMutation.isPending ? <><span className="spinner" /> Creating account...</> : 'Create Account →'}
+            {registerMutation.isPending
+              ? <><span className="spinner" /> Creating account…</>
+              : 'Create Account →'}
           </button>
 
           <p className={styles.terms}>
@@ -147,8 +159,13 @@ function RegisterForm() {
           </p>
         </form>
 
+        {/* ── Footer link ── */}
         <div className={styles.divider}><span>Already have an account?</span></div>
-        <Link href="/login" className="btn-outline" style={{ width: '100%', justifyContent: 'center' }}>
+        <Link
+          href="/login"
+          className="btn-outline"
+          style={{ width: '100%', justifyContent: 'center' }}
+        >
           Sign In
         </Link>
       </div>
@@ -158,7 +175,11 @@ function RegisterForm() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}><div className="spinner" style={{ width: 40, height: 40 }} /></div>}>
+    <Suspense fallback={
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <div className="spinner" style={{ width: 40, height: 40 }} />
+      </div>
+    }>
       <RegisterForm />
     </Suspense>
   );

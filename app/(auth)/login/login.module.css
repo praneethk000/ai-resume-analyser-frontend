@@ -95,3 +95,14 @@
   background: var(--bg-card);
   padding: 0 12px;
 }
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .card {
+    padding: 28px 20px;
+    border-radius: var(--radius-lg);
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+}

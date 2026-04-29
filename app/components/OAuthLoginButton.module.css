@@ -1,0 +1,102 @@
+/* Google OAuth button – self-contained so Tailwind can't override it */
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0 20px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #f0f0ff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, sans-serif;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  transition: background 0.22s ease, border-color 0.22s ease, transform 0.18s ease, box-shadow 0.22s ease;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0);
+  transition: background 0.2s ease;
+  border-radius: inherit;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+.btn:hover::after {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid rgba(124, 58, 237, 0.7);
+  outline-offset: 3px;
+}
+
+/* The coloured Google "G" logo wrapper */
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.label {
+  flex: 1;
+  text-align: center;
+  /* nudge left by icon width so text looks visually centred */
+  margin-right: 20px;
+}
+
+/* ── OR divider ── */
+.orDivider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 18px;
+  color: #5a5a80;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.orDivider::before,
+.orDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .btn {
+    height: 48px;
+    font-size: 0.9rem;
+    gap: 10px;
+  }
+}

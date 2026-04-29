@@ -8,6 +8,7 @@ import styles from './login.module.css';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '@/app/lib/api';
 import toast from 'react-hot-toast';
+import OAuthLoginButton, { OrDivider } from '@/app/components/OAuthLoginButton';
 
 function LoginForm() {
   const router = useRouter();
@@ -22,7 +23,7 @@ function LoginForm() {
     mutationFn: loginUser,
     onSuccess: (data) => {
       login(data);
-      toast.success('Successfully signed in!');
+      toast.success('Welcome back!');
       router.push('/dashboard');
     },
     onError: (error) => {
@@ -41,7 +42,6 @@ function LoginForm() {
       toast.error('Please enter your password.');
       return;
     }
-    
     loginMutation.mutate({ email: form.email, password: form.password });
   }
 
@@ -49,17 +49,26 @@ function LoginForm() {
     <div className={styles.page}>
       <div className={styles.bg} aria-hidden />
       <div className={styles.card}>
+        {/* Logo */}
         <div className={styles.logoRow}>
           <Link href="/" className={styles.logo}>◆ ResumeAI</Link>
         </div>
+
         <h1 className={styles.title}>Welcome back</h1>
         <p className={styles.subtitle}>Sign in to continue to your dashboard</p>
 
+        {/* ── Google OAuth (primary CTA) ── */}
+        <OAuthLoginButton label="Continue with Google" />
+
+        {/* ── OR divider ── */}
+        <OrDivider text="or" />
+
+        {/* ── Email / password form ── */}
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className="form-group">
-            <label className="form-label" htmlFor="email">Email</label>
+            <label className="form-label" htmlFor="login-email">Email</label>
             <input
-              id="email"
+              id="login-email"
               name="email"
               type="email"
               placeholder="you@example.com"
@@ -71,9 +80,9 @@ function LoginForm() {
             />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+            <label className="form-label" htmlFor="login-password">Password</label>
             <input
-              id="password"
+              id="login-password"
               name="password"
               type="password"
               placeholder="Your password"
@@ -85,22 +94,28 @@ function LoginForm() {
             />
           </div>
 
-          {/* Error display removed in favor of toast */}
-
           <button
             type="submit"
             className="btn-primary"
+            id="login-submit-btn"
             disabled={loginMutation.isPending}
             style={{ width: '100%', justifyContent: 'center', padding: '13px' }}
           >
-            {loginMutation.isPending ? <><span className="spinner" style={{width: 14, height: 14, marginRight: 8, borderTopColor: 'transparent'}}/> Signing in...</> : 'Sign in'}
+            {loginMutation.isPending
+              ? <><span className="spinner" style={{ width: 14, height: 14, marginRight: 8 }} /> Signing in…</>
+              : 'Sign in with Email'}
           </button>
         </form>
 
+        {/* ── Footer link ── */}
         <div className={styles.divider}>
           <span>Don&apos;t have an account?</span>
         </div>
-        <Link href="/register" className="btn-outline" style={{ width: '100%', justifyContent: 'center' }}>
+        <Link
+          href="/register"
+          className="btn-outline"
+          style={{ width: '100%', justifyContent: 'center' }}
+        >
           Create Account
         </Link>
       </div>
