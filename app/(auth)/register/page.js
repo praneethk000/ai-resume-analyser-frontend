@@ -105,7 +105,7 @@ function RegisterForm() {
               id="reg-username"
               name="username"
               type="text"
-              placeholder="Praneeth Kumar"
+              placeholder="John Doe"
               className="form-input"
               value={form.username}
               onChange={handleChange}
